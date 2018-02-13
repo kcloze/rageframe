@@ -1,6 +1,5 @@
 <?php
 use yii\widgets\ActiveForm;
-use backend\models\Provinces;
 
 $this->params['breadcrumbs'][] = ['label' => '用户管理', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => '信息编辑'];
@@ -16,24 +15,24 @@ $this->params['breadcrumbs'][] = ['label' => '信息编辑'];
                 <div class="ibox-content">
                     <?php $form = ActiveForm::begin(); ?>
                     <div class="col-sm-12">
-                        <?= $form->field($model, 'realname')->textInput() ?>
-                        <?= $form->field($model, 'mobile_phone')->textInput() ?>
-                        <?= $form->field($model, 'email')->textInput() ?>
-                        <?= $form->field($model,'birthday')->widget('kartik\date\DatePicker',[
-                            'language'  => 'zh-CN',
-                            'layout'=>'{picker}{input}',
+                        <?= $form->field($model, 'realname')->textInput(); ?>
+                        <?= $form->field($model, 'mobile_phone')->textInput(); ?>
+                        <?= $form->field($model, 'email')->textInput(); ?>
+                        <?= $form->field($model, 'birthday')->widget('kartik\date\DatePicker', [
+                            'language'      => 'zh-CN',
+                            'layout'        => '{picker}{input}',
                             'pluginOptions' => [
                                 'format'         => 'yyyy-mm-dd',
-                                'todayHighlight' => true,// 今日高亮
-                                'autoclose'      => true,// 选择后自动关闭
-                                'todayBtn'       => true,// 今日按钮显示
+                                'todayHighlight' => true, // 今日高亮
+                                'autoclose'      => true, // 选择后自动关闭
+                                'todayBtn'       => true, // 今日按钮显示
                             ],
-                            'options'=>[
+                            'options'=> [
                                 'class'     => 'form-control no_bor',
-                                'readonly'  => 'readonly',// 禁止输入
-                            ]
+                                'readonly'  => 'readonly', // 禁止输入
+                            ],
                         ]); ?>
-                        <?= $form->field($model, 'sex')->radioList(['1' => '男','2' => '女']) ?>
+                        <?= $form->field($model, 'sex')->radioList(['1' => '男', '2' => '女']); ?>
                         <div class="hr-line-dashed"></div>
                     </div>
                     <div class="form-group">

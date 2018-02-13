@@ -1,8 +1,8 @@
 <?php
-use yii\widgets\ActiveForm;
 use yii\helpers\Url;
+use yii\widgets\ActiveForm;
 
-$this->title = $model->isNewRecord ? '创建' : '编辑';
+$this->title                   = $model->isNewRecord ? '创建' : '编辑';
 $this->params['breadcrumbs'][] = ['label' => '文章管理', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -11,8 +11,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <?php $form = ActiveForm::begin([
             'options' => [
-                'enctype' => 'multipart/form-data'
-            ]
+                'enctype' => 'multipart/form-data',
+            ],
         ]); ?>
         <div class="col-sm-9">
             <div class="ibox float-e-margins">
@@ -23,43 +23,43 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="ibox-content">
                         <div class="col-md-12">
                             <?= $form->field($model, 'head_portrait')->widget('backend\widgets\webuploader\File', [
-                                'boxId' => 'head_portrait',
+                                'boxId'   => 'head_portrait',
                                 'options' => [
                                     'multiple'   => false,
                                 ],
                                 'pluginOptions' => [
-                                    'uploadUrl' => Url::to(['/file/upload-files']),//上传路径
-                                ]
+                                    'uploadUrl' => Url::to(['/file/upload-files']), //上传路径
+                                ],
                             ])->label('单文件上传'); ?>
 
                             <?= $form->field($model, 'head_portrait[]')->widget('backend\widgets\webuploader\File', [
-                                'boxId' => 'head_portrait_images',
+                                'boxId'   => 'head_portrait_images',
                                 'options' => [
                                     'multiple'   => true,
                                 ],
                                 'pluginOptions' => [
-                                    'uploadUrl' => Url::to(['/file/upload-files']),//上传路径
-                                ]
-                            ])->label('多文文件上传');?>
+                                    'uploadUrl' => Url::to(['/file/upload-files']), //上传路径
+                                ],
+                            ])->label('多文文件上传'); ?>
 
                             <?= $form->field($model, 'head_portrait')->widget('backend\widgets\webuploader\File', [
-                                'boxId' => 'qiniu',
+                                'boxId'         => 'qiniu',
                                 'pluginOptions' => [
-                                    'uploadUrl' => Url::to(['/file/qiniu']),//上传路径
+                                    'uploadUrl' => Url::to(['/file/qiniu']), //上传路径
                                 ],
                                 'options' => [
                                     'multiple'   => false,
-                                ]
+                                ],
                             ])->label('七牛文件上传'); ?>
 
                             <?= $form->field($model, 'head_portrait')->widget('backend\widgets\webuploader\File', [
-                                'boxId' => 'aliOss',
+                                'boxId'         => 'aliOss',
                                 'pluginOptions' => [
-                                    'uploadUrl' => Url::to(['/file/ali-oss']),//上传路径
+                                    'uploadUrl' => Url::to(['/file/ali-oss']), //上传路径
                                 ],
                                 'options' => [
                                     'multiple'   => false,
-                                ]
+                                ],
                             ])->label('阿里云OSS文件上传'); ?>
 
                             <div class="hr-line-dashed"></div>

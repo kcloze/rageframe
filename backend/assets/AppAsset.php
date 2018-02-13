@@ -1,8 +1,10 @@
 <?php
-/**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
+
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
 namespace backend\assets;
@@ -10,8 +12,7 @@ namespace backend\assets;
 use yii\web\AssetBundle;
 
 /**
- * Class AppAsset
- * @package backend\assets
+ * Class AppAsset.
  */
 class AppAsset extends AssetBundle
 {
@@ -24,7 +25,7 @@ class AppAsset extends AssetBundle
         '/resource/backend/css/font-awesome.min.css?v=4.4.0',
         '/resource/backend/css/animate.min.css',
         '/resource/backend/css/style.css?v=4.1.0',
-        '/resource/backend/css/plugins/sweetalert/sweetalert.css?v=1',// 弹出框css
+        '/resource/backend/css/plugins/sweetalert/sweetalert.css?v=1', // 弹出框css
         // 复选框样式
         '/resource/backend/css/plugins/iCheck/custom.css',
         '/resource/backend/css/plugins/iCheck/grey.css',
@@ -37,8 +38,8 @@ class AppAsset extends AssetBundle
         '/resource/backend/js/plugins/slimscroll/jquery.slimscroll.min.js',
         '/resource/backend/js/plugins/layer/layer.min.js',
         '/resource/backend/js/plugins/pace/pace.min.js',
-        '/resource/backend/js/plugins/sweetalert/sweetalert.min.js',// 弹出框js
-        '/resource/backend/js/plugins/iCheck/icheck.min.js',// 基础表单js
+        '/resource/backend/js/plugins/sweetalert/sweetalert.min.js', // 弹出框js
+        '/resource/backend/js/plugins/iCheck/icheck.min.js', // 基础表单js
         '/resource/backend/js/hplus.min.js?v=4.0.0',
         '/resource/backend/js/contabs.min.js',
         '/resource/backend/js/template.js',

@@ -1,25 +1,34 @@
 <?php
+
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace common\helpers;
 
-use \PHPExcel;
-use \PHPExcel_Reader_Excel2007;
-use \PHPExcel_Reader_Excel5;
-use \PHPExcel_IOFactory;
+use PHPExcel;
+use PHPExcel_Reader_Excel2007;
+use PHPExcel_Reader_Excel5;
 
 /**
  * 表格导出辅助类
- * Class ExcelHelper
- * @package common\helpers
+ * Class ExcelHelper.
  */
 class ExcelHelper
 {
     /**
-     * 读取excel表格中的数据
+     * 读取excel表格中的数据.
+     *
      * @author xxx
      * @dateTime 2017-06-12T09:39:01+0800
-     * @param    string $filePath excel文件路径
-     * @param    integer $startRow 开始的行数
-     * @return   array|bool
+     *
+     * @param string $filePath excel文件路径
+     * @param int    $startRow 开始的行数
+     *
+     * @return array|bool
      */
     public static function getExcelData($filePath, $startRow = 1)
     {
@@ -27,15 +36,14 @@ class ExcelHelper
         /**默认用excel2007读取excel，若格式不对，则用之前的版本进行读取*/
         $PHPReader = new PHPExcel_Reader_Excel2007();
         // setReadDataOnly Set read data only 只读单元格的数据，不格式化 e.g. 读时间会变成一个数据等
-        $PHPReader->setReadDataOnly(TRUE);
-        if (!$PHPReader->canRead($filePath))
-        {
+        $PHPReader->setReadDataOnly(true);
+        if (!$PHPReader->canRead($filePath)) {
             $PHPReader = new PHPExcel_Reader_Excel5();
             // setReadDataOnly Set read data only 只读单元格的数据，不格式化 e.g. 读时间会变成一个数据等
-            $PHPReader->setReadDataOnly(TRUE);
-            if (!$PHPReader->canRead($filePath))
-            {
+            $PHPReader->setReadDataOnly(true);
+            if (!$PHPReader->canRead($filePath)) {
                 echo '不能读取excel';
+
                 return false;
             }
         }
@@ -47,10 +55,9 @@ class ExcelHelper
         $sheetNames = $PHPExcel->getSheetNames();
 
         // 获取所有的sheet表格数据
-        $excleDatas = [];
+        $excleDatas  = [];
         $emptyRowNum = 0;
-        for ($i = 0; $i < $sheetCount; $i++)
-        {
+        for ($i = 0; $i < $sheetCount; ++$i) {
             /**读取excel文件中的第一个工作表*/
             $currentSheet = $PHPExcel->getSheet($i);
             /**取得最大的列号*/
@@ -59,28 +66,22 @@ class ExcelHelper
             $allRow = $currentSheet->getHighestRow();
 
             $arr = [];
-            for ($currentRow = $startRow; $currentRow <= $allRow; $currentRow++)
-            {
+            for ($currentRow = $startRow; $currentRow <= $allRow; ++$currentRow) {
                 /**从第A列开始输出*/
-                for ($currentColumn = 'A'; $currentColumn <= $allColumn; $currentColumn++)
-                {
-                    $val = $currentSheet->getCellByColumnAndRow(ord($currentColumn) - 65, $currentRow)->getValue();
+                for ($currentColumn = 'A'; $currentColumn <= $allColumn; ++$currentColumn) {
+                    $val                = $currentSheet->getCellByColumnAndRow(ord($currentColumn) - 65, $currentRow)->getValue();
                     $arr[$currentRow][] = trim($val);
                 }
                 $arr[$currentRow] = array_filter($arr[$currentRow]);
                 // 统计连续空行
-                if(empty($arr[$currentRow]) && $emptyRowNum <= 50)
-                {
-                    $emptyRowNum++ ;
-                }
-                else
-                {
+                if (empty($arr[$currentRow]) && $emptyRowNum <= 50) {
+                    ++$emptyRowNum;
+                } else {
                     $emptyRowNum = 0;
                 }
                 // 防止坑队友的同事在excel里面弄出很多的空行，陷入很漫长的循环中，设置如果连续超过50个空行就退出循环，返回结果
                 // 连续50行数据为空，不再读取后面行的数据，防止读满内存
-                if($emptyRowNum > 50)
-                {
+                if ($emptyRowNum > 50) {
                     break;
                 }
             }
@@ -91,70 +92,70 @@ class ExcelHelper
         $returnData = $excleDatas ? array_shift($excleDatas) : [];
 
         // 第一行数据就是空的，为了保留其原始数据，第一行数据就不做array_fiter操作；
-        $returnData = $returnData && isset($returnData[$startRow]) && !empty($returnData[$startRow])  ? array_filter($returnData) : $returnData;
+        $returnData = $returnData && isset($returnData[$startRow]) && !empty($returnData[$startRow]) ? array_filter($returnData) : $returnData;
+
         return $returnData;
         // return $excleDatas  ? array_filter(array_shift($excleDatas)) : [];
     }
 
     /**
-     * 导出Excel
+     * 导出Excel.
      *
-     * @param array $list
-     * @param array $header
-     *  $header = [
-     *        ['field' => 'a', 'name' =>  '文本', 'type' => 'text'],
-     *        ['field' => 'a.child.num', 'name' =>  '文本', 'type' => 'text'],// 表示读取数组['a']['child']['num']
-     *        ['field' => 'b', 'name' =>  '创建日期', 'type' => 'date', 'rule' => 'Y-m-d H:i:s'],
-     *        ['field' => 'c', 'name' =>  '选择内容', 'type' => 'selectd', 'rule' => ['1' => '选择一','2' => '选择二']],
-     * ];
+     * @param array  $list
+     * @param array  $header
+     *                         $header = [
+     *                         ['field' => 'a', 'name' =>  '文本', 'type' => 'text'],
+     *                         ['field' => 'a.child.num', 'name' =>  '文本', 'type' => 'text'],// 表示读取数组['a']['child']['num']
+     *                         ['field' => 'b', 'name' =>  '创建日期', 'type' => 'date', 'rule' => 'Y-m-d H:i:s'],
+     *                         ['field' => 'c', 'name' =>  '选择内容', 'type' => 'selectd', 'rule' => ['1' => '选择一','2' => '选择二']],
+     *                         ];
      * @param string $title
      * @param string $filename
+     *
      * @return bool
      */
-    public static function exportExcelData ($list = [], $header = [], $filename = '', $title = 'simple')
+    public static function exportExcelData($list = [], $header = [], $filename = '', $title = 'simple')
     {
-        if (!is_array ($list) || !is_array ($header)) return false;
+        if (!is_array($list) || !is_array($header)) {
+            return false;
+        }
         // 默认文件名称
         !$filename && $filename = time();
-        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel            = new \PHPExcel();
         // 设置属性
-        $objPHPExcel->getProperties()->setCreator("Maarten Balliauw");
-        $objPHPExcel->getProperties()->setLastModifiedBy("Maarten Balliauw");
-        $objPHPExcel->getProperties()->setTitle("Office 2007 XLSX Test Document");
-        $objPHPExcel->getProperties()->setSubject("Office 2007 XLSX Test Document");
-        $objPHPExcel->getProperties()->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.");
+        $objPHPExcel->getProperties()->setCreator('Maarten Balliauw');
+        $objPHPExcel->getProperties()->setLastModifiedBy('Maarten Balliauw');
+        $objPHPExcel->getProperties()->setTitle('Office 2007 XLSX Test Document');
+        $objPHPExcel->getProperties()->setSubject('Office 2007 XLSX Test Document');
+        $objPHPExcel->getProperties()->setDescription('Test document for Office 2007 XLSX, generated using PHP classes.');
 
         // 添加一些数据
         $objPHPExcel->setActiveSheetIndex(0);
         // 写入头部
         $hk = 0;
-        foreach ($header as $k => $v)
-        {
+        foreach ($header as $k => $v) {
             $colum = \PHPExcel_Cell::stringFromColumnIndex($hk);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colum.'1', $v['name']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colum . '1', $v['name']);
             $hk += 1;
         }
 
-        $column = 2;
+        $column      = 2;
         $objActSheet = $objPHPExcel->getActiveSheet();
 
         $size = ceil(count($list) / 500);
-        for($i = 0; $i < $size; $i++)
-        {
+        for ($i = 0; $i < $size; ++$i) {
             $buffer = array_slice($list, $i * 500, 500);
-            foreach($buffer as $row)
-            {
+            foreach ($buffer as $row) {
                 $span = 0;
-                foreach($header as $key => $value)
-                {
+                foreach ($header as $key => $value) {
                     $resultData = trim(self::formattingField($row, $value['field']));
-                    $realData = self::formatting($header[$key], $resultData);
-                    $j = \PHPExcel_Cell::stringFromColumnIndex($span);
+                    $realData   = self::formatting($header[$key], $resultData);
+                    $j          = \PHPExcel_Cell::stringFromColumnIndex($span);
                     $objActSheet->setCellValue($j . $column, $realData);
-                    $span++;
+                    ++$span;
                 }
 
-                $column++;
+                ++$column;
             }
         }
 
@@ -170,49 +171,47 @@ class ExcelHelper
     }
 
     /**
-     * 导出csv
+     * 导出csv.
      *
-     * @param array $list
-     * @param array $header
-     *  $header = [
-     *        ['field' => 'a', 'name' =>  '文本', 'type' => 'text'],
-     *        ['field' => 'a.child.num', 'name' =>  '文本', 'type' => 'text'],// 表示读取数组['a']['child']['num']
-     *        ['field' => 'b', 'name' =>  '创建日期', 'type' => 'date', 'rule' => 'Y-m-d H:i:s'],
-     *        ['field' => 'c', 'name' =>  '选择内容', 'type' => 'selectd', 'rule' => ['1' => '选择一','2' => '选择二']],
-     * ];
+     * @param array  $list
+     * @param array  $header
+     *                         $header = [
+     *                         ['field' => 'a', 'name' =>  '文本', 'type' => 'text'],
+     *                         ['field' => 'a.child.num', 'name' =>  '文本', 'type' => 'text'],// 表示读取数组['a']['child']['num']
+     *                         ['field' => 'b', 'name' =>  '创建日期', 'type' => 'date', 'rule' => 'Y-m-d H:i:s'],
+     *                         ['field' => 'c', 'name' =>  '选择内容', 'type' => 'selectd', 'rule' => ['1' => '选择一','2' => '选择二']],
+     *                         ];
      * @param string $title
      * @param string $filename
+     *
      * @return bool
      */
     public static function exportCSVData($list = [], $header = [], $filename = '')
     {
-        if (!is_array ($list) || !is_array ($header)) return false;
+        if (!is_array($list) || !is_array($header)) {
+            return false;
+        }
         // 默认文件名称
         !$filename && $filename = time();
 
         $html = "\xEF\xBB\xBF";
-        foreach($header as $li)
-        {
+        foreach ($header as $li) {
             $html .= $li['name'] . "\t ,";
         }
 
         $html .= "\n";
 
-        if(!empty($list))
-        {
+        if (!empty($list)) {
             $info = [];
             $size = ceil(count($list) / 500);
-            for($i = 0; $i < $size; $i++)
-            {
+            for ($i = 0; $i < $size; ++$i) {
                 $buffer = array_slice($list, $i * 500, 500);
-                foreach($buffer as $row)
-                {
+                foreach ($buffer as $row) {
                     $data = [];
-                    foreach($header as $key => $value)
-                    {
+                    foreach ($header as $key => $value) {
                         $resultData = trim(self::formattingField($row, $value['field']));
-                        $realData = self::formatting($header[$key], $resultData);
-                        $data[] = str_replace(PHP_EOL,'', $realData);
+                        $realData   = self::formatting($header[$key], $resultData);
+                        $data[]     = str_replace(PHP_EOL, '', $realData);
                     }
 
                     $info[] = implode("\t ,", $data) . "\t ,";
@@ -223,64 +222,59 @@ class ExcelHelper
             $html .= implode("\n", $info);
         }
 
-        header("Content-type:text/csv");
+        header('Content-type:text/csv');
         header("Content-Disposition:attachment; filename={$filename}.csv");
         echo $html;
         exit();
     }
 
     /**
-     * 格式化内容
+     * 格式化内容.
      *
      * @param array $array 头部规则
+     * @param mixed $value
+     *
      * @return false|mixed|null|string 内容值
      */
     protected static function formatting(array $array, $value)
     {
-        switch ($array['type'])
-        {
+        switch ($array['type']) {
             // 文本
-            case 'text' :
+            case 'text':
                 return $value;
                 break;
 
             // 日期
-            case  'date' :
+            case  'date':
                 return date($array['rule'], $value);
                 break;
 
             // 选择框
-            case  'selectd' :
-                return  isset($array['rule'][$value])  ? $array['rule'][$value] : null ;
+            case  'selectd':
+                return  isset($array['rule'][$value]) ? $array['rule'][$value] : null;
                 break;
         }
-
-        return null;
     }
 
     /**
-     * 解析字段
+     * 解析字段.
      *
      * @param $row
      * @param $field
+     *
      * @return mixed
      */
     protected static function formattingField($row, $field)
     {
         $newField = explode('.', $field);
-        if(count($newField) == 1)
-        {
+        if (1 == count($newField)) {
             return $row[$field];
         }
 
-        foreach ($newField as $item)
-        {
-            if(isset($row[$item]))
-            {
+        foreach ($newField as $item) {
+            if (isset($row[$item])) {
                 $row = $row[$item];
-            }
-            else
-            {
+            } else {
                 break;
             }
         }

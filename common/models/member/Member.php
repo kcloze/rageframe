@@ -1,48 +1,56 @@
 <?php
+
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace common\models\member;
 
 use Yii;
-use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%user}}".
  *
- * @property integer $id
+ * @property int $id
  * @property string $user_openid
  * @property string $username
  * @property string $password_hash
  * @property string $auth_key
  * @property string $password_reset_token
- * @property integer $type
+ * @property int $type
  * @property string $nickname
  * @property string $realname
  * @property string $head_portrait
- * @property integer $sex
+ * @property int $sex
  * @property string $qq
  * @property string $email
  * @property string $birthday
  * @property string $user_money
  * @property string $accumulate_money
  * @property string $frozen_money
- * @property integer $user_integral
+ * @property int $user_integral
  * @property string $address_id
- * @property integer $visit_count
+ * @property int $visit_count
  * @property string $home_phone
  * @property string $mobile_phone
  * @property string $passwd_question
  * @property string $passwd_answer
- * @property integer $role
- * @property integer $status
- * @property integer $last_time
+ * @property int $role
+ * @property int $status
+ * @property int $last_time
  * @property string $last_ip
- * @property integer $created_at
- * @property integer $updated_at
+ * @property int $created_at
+ * @property int $updated_at
  */
 class Member extends \common\models\base\User
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -50,7 +58,7 @@ class Member extends \common\models\base\User
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -61,26 +69,26 @@ class Member extends \common\models\base\User
             [['birthday'], 'safe'],
             [['user_money', 'accumulate_money', 'frozen_money'], 'number'],
             [['username', 'qq', 'home_phone', 'mobile_phone'], 'string', 'max' => 20],
-            ['mobile_phone','match','pattern'=>'/^[1][3578][0-9]{9}$/','message'=>'不是一个有效的手机号码'],
+            ['mobile_phone', 'match', 'pattern'=>'/^[1][3578][0-9]{9}$/', 'message'=>'不是一个有效的手机号码'],
             [['password_hash', 'password_reset_token', 'head_portrait', 'passwd_answer'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['nickname', 'realname'], 'string', 'max' => 10],
             [['email'], 'string', 'max' => 60],
             [['passwd_question'], 'string', 'max' => 50],
-            [['city','province','country'], 'string', 'max' => 100],
-            [['email'],'email'],
+            [['city', 'province', 'country'], 'string', 'max' => 100],
+            [['email'], 'email'],
             [['last_ip'], 'string', 'max' => 16],
-            ['last_ip','default', 'value' => '0.0.0.0'],
+            ['last_ip', 'default', 'value' => '0.0.0.0'],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'id'                    => 'ID',
             'username'              => '登陆账号',
             'password_hash'         => '登陆密码',
             'auth_key'              => 'auth登录秘钥',
@@ -118,27 +126,28 @@ class Member extends \common\models\base\User
      */
     public static function add($data)
     {
-        $model = new Member();
-        $model->head_portrait = $data->headimgurl;
-        $model->nickname = $data->nickname;
-        isset($data->sex) && $model->sex = $data->sex;
-        isset($data->city) && $model->city = $data->city;
+        $model                                     = new self();
+        $model->head_portrait                      = $data->headimgurl;
+        $model->nickname                           = $data->nickname;
+        isset($data->sex) && $model->sex           = $data->sex;
+        isset($data->city) && $model->city         = $data->city;
         isset($data->province) && $model->province = $data->province;
-        isset($data->country) && $model->country = $data->country;
+        isset($data->country) && $model->country   = $data->country;
         $model->save();
 
         return Yii::$app->db->getLastInsertID();
     }
 
     /**
-     * 行为
+     * 行为.
+     *
      * @param bool $insert
+     *
      * @return bool
      */
     public function beforeSave($insert)
     {
-        if($this->isNewRecord)
-        {
+        if ($this->isNewRecord) {
             $this->auth_key = Yii::$app->security->generateRandomString();
         }
 
@@ -146,14 +155,15 @@ class Member extends \common\models\base\User
     }
 
     /**
-     * 行为插入时间戳
+     * 行为插入时间戳.
+     *
      * @return array
      */
     public function behaviors()
     {
         return [
             [
-                'class' => TimestampBehavior::className(),
+                'class'      => TimestampBehavior::className(),
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
                     ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],

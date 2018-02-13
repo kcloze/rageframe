@@ -1,16 +1,23 @@
 <?php
+
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace api\models;
 
-use Yii;
 use common\models\member\Member;
 
 /**
- * Login form
+ * Login form.
  */
 class LoginForm extends \common\models\base\LoginForm
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -29,21 +36,17 @@ class LoginForm extends \common\models\base\LoginForm
     }
 
     /**
-     * 用户登陆
+     * 用户登陆.
      *
      * @return mixed|null|static
      */
     public function getUser()
     {
-        if ($this->_user == false)
-        {
+        if (false == $this->_user) {
             // email 登录
-            if (strpos($this->username, "@"))
-            {
+            if (strpos($this->username, '@')) {
                 $this->_user = Member::findOne(['email' => $this->username]);
-            }
-            else
-            {
+            } else {
                 $this->_user = Member::findByUsername($this->username);
             }
         }

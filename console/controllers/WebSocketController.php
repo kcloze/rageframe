@@ -1,19 +1,26 @@
 <?php
+
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace console\controllers;
 
+use common\components\WebSocket;
 use Yii;
 use yii\console\Controller;
 use yii\helpers\FileHelper;
-use common\components\WebSocket;
 
 /**
  * WebSocket
  * 启动 php ./yii web-socket/start
  * 停止 php ./yii web-socket/stop
- * 重启 php ./yii web-socket/restart
+ * 重启 php ./yii web-socket/restart.
  *
  * Class WebSocketController
- * @package console\controllers
  */
 class WebSocketController extends Controller
 {
@@ -25,34 +32,33 @@ class WebSocketController extends Controller
     public $host = '0.0.0.0';
 
     /**
-     * 监听端口
+     * 监听端口.
      *
      * @var string
      */
     public $port = 9501;
 
     /**
-     * swoole 配置
+     * swoole 配置.
      *
      * @var array
      */
     public $config = [
-        'daemonize' => false, // 守护进程执行
+        'daemonize'     => false, // 守护进程执行
         'ssl_cert_file' => '',
-        'ssl_key_file' => '',
-        'pid_file' => '',
+        'ssl_key_file'  => '',
+        'pid_file'      => '',
     ];
 
     /**
-     * 启动
+     * 启动.
      *
      * @throws \yii\base\Exception
      */
     public function actionStart()
     {
-        if ($this->getPid() !== false)
-        {
-            $this->stderr("服务已经启动");
+        if (false !== $this->getPid()) {
+            $this->stderr('服务已经启动');
             exit(1);
         }
 
@@ -67,7 +73,7 @@ class WebSocketController extends Controller
     }
 
     /**
-     * 关闭进程
+     * 关闭进程.
      */
     public function actionStop()
     {
@@ -76,7 +82,7 @@ class WebSocketController extends Controller
     }
 
     /**
-     * 重启进程
+     * 重启进程.
      *
      * @throws \yii\base\Exception
      */
@@ -84,82 +90,72 @@ class WebSocketController extends Controller
     {
         $this->sendSignal(SIGTERM);
         $time = 0;
-        while (posix_getpgid($this->getPid()) && $time <= 10)
-        {
+        while (posix_getpgid($this->getPid()) && $time <= 10) {
             usleep(100000);
-            $time++;
+            ++$time;
         }
 
-        if ($time > 100)
-        {
-            $this->stderr("服务停止超时" . PHP_EOL);
+        if ($time > 100) {
+            $this->stderr('服务停止超时' . PHP_EOL);
             exit(1);
         }
 
-        if( $this->getPid() === false )
-        {
-            $this->stdout("服务重启成功" . PHP_EOL);
-        }
-        else
-        {
-            $this->stderr("服务停止错误, 请手动处理杀死进程" . PHP_EOL);
+        if (false === $this->getPid()) {
+            $this->stdout('服务重启成功' . PHP_EOL);
+        } else {
+            $this->stderr('服务停止错误, 请手动处理杀死进程' . PHP_EOL);
         }
 
         $this->actionStart();
     }
 
     /**
-     * 发送信号
+     * 发送信号.
      *
      * @param $sig
      */
     private function sendSignal($sig)
     {
-        if ($pid = $this->getPid())
-        {
+        if ($pid = $this->getPid()) {
             posix_kill($pid, $sig);
-        }
-        else
-        {
-            $this->stdout("服务未运行!" . PHP_EOL);
+        } else {
+            $this->stdout('服务未运行!' . PHP_EOL);
             exit(1);
         }
     }
 
     /**
-     * 获取pid进程
+     * 获取pid进程.
      *
      * @return bool|string
      */
     private function getPid()
     {
         $pid_file = $this->config['pid_file'];
-        if (file_exists($pid_file))
-        {
+        if (file_exists($pid_file)) {
             $pid = file_get_contents($pid_file);
-            if (posix_getpgid($pid))
-            {
+            if (posix_getpgid($pid)) {
                 return $pid;
             }
-            else
-            {
-                unlink($pid_file);
-            }
+
+            unlink($pid_file);
         }
 
         return false;
     }
 
     /**
-     * 写入pid进程
+     * 写入pid进程.
      *
      * @throws \yii\base\Exception
      */
     private function setPid()
     {
         $parentPid = getmypid();
-        $pidDir = dirname($this->config['pid_file']);
-        if(!file_exists($pidDir)) FileHelper::createDirectory($pidDir);
+        $pidDir    = dirname($this->config['pid_file']);
+        if (!file_exists($pidDir)) {
+            FileHelper::createDirectory($pidDir);
+        }
         file_put_contents($this->config['pid_file'], $parentPid + 1);
     }
 }

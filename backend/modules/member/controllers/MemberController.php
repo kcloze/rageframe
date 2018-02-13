@@ -1,29 +1,35 @@
 <?php
+
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace backend\modules\member\controllers;
 
+use common\models\member\Member;
 use yii;
 use yii\data\Pagination;
-use common\models\member\Member;
 
 /**
- * 用户控制器
+ * 用户控制器.
  *
  * Class MemberController
- * @package backend\modules\member\controllers
  */
 class MemberController extends UController
 {
     /**
-     * 首页
+     * 首页.
      */
     public function actionIndex()
     {
         $request  = Yii::$app->request;
-        $type     = $request->get('type',1);
-        $keyword  = $request->get('keyword','');
+        $type     = $request->get('type', 1);
+        $keyword  = $request->get('keyword', '');
 
-        switch ($type)
-        {
+        switch ($type) {
             case '1':
                 $where = ['like', 'username', $keyword];
                 break;
@@ -39,24 +45,23 @@ class MemberController extends UController
         }
 
         // 关联角色查询
-       $data   = Member::find()->where($where);
-       $pages  = new Pagination(['totalCount' =>$data->count(), 'pageSize' =>$this->_pageSize]);
-       $models = $data->offset($pages->offset)
+        $data   = Member::find()->where($where);
+        $pages  = new Pagination(['totalCount' =>$data->count(), 'pageSize' =>$this->_pageSize]);
+        $models = $data->offset($pages->offset)
            ->orderBy('type desc,created_at desc')
            ->limit($pages->limit)
            ->all();
 
-       return $this->render('index',[
+        return $this->render('index', [
            'models'  => $models,
            'pages'   => $pages,
            'type'    => $type,
            'keyword' => $keyword,
        ]);
-
     }
 
     /**
-     * 编辑/新增
+     * 编辑/新增.
      *
      * @return string|\yii\web\Response
      */
@@ -66,18 +71,15 @@ class MemberController extends UController
         $id       = $request->get('id');
         $model    = $this->findModel($id);
 
-        $pass     = $model->password_hash;// 原密码
-        if ($model->load(Yii::$app->request->post()))
-        {
+        $pass     = $model->password_hash; // 原密码
+        if ($model->load(Yii::$app->request->post())) {
             // 验证密码是否修改
-            if($model->password_hash != $pass)
-            {
+            if ($model->password_hash != $pass) {
                 $model->password_hash = Yii::$app->security->generatePasswordHash($model->password_hash);
             }
 
             // 提交创建
-            if($model->save())
-            {
+            if ($model->save()) {
                 return $this->redirect(['index']);
             }
         }
@@ -88,25 +90,23 @@ class MemberController extends UController
     }
 
     /**
-     * 删除
+     * 删除.
      *
      * @param $id
+     *
      * @return mixed
      */
     public function actionDelete($id)
     {
-        if($this->findModel($id)->delete())
-        {
-            return $this->message("删除成功",$this->redirect(['index']));
+        if ($this->findModel($id)->delete()) {
+            return $this->message('删除成功', $this->redirect(['index']));
         }
-        else
-        {
-            return $this->message("删除失败",$this->redirect(['index']),'error');
-        }
+
+        return $this->message('删除失败', $this->redirect(['index']), 'error');
     }
 
     /**
-     * 修改个人资料
+     * 修改个人资料.
      *
      * @return string|yii\web\Response
      */
@@ -117,8 +117,7 @@ class MemberController extends UController
         $model    = $this->findModel($id);
 
         // 提交表单
-        if ($model->load(Yii::$app->request->post()) && $model->save())
-        {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         }
 
@@ -128,21 +127,20 @@ class MemberController extends UController
     }
 
     /**
-     * 返回模型
+     * 返回模型.
      *
      * @param $id
+     *
      * @return Member|static
      */
     protected function findModel($id)
     {
-        if (empty($id))
-        {
-            return new Member;
+        if (empty($id)) {
+            return new Member();
         }
 
-        if (empty(($model = Member::findOne($id))))
-        {
-            return new Member;
+        if (empty(($model = Member::findOne($id)))) {
+            return new Member();
         }
 
         return $model;

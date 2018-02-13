@@ -1,30 +1,36 @@
 <?php
-/**
- * author: yidashi
- * Date: 2015/12/4
- * Time: 17:15
+
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
+
 namespace yidashi\markdown;
 
 use yii;
 use yii\helpers\Html;
 
-class Markdown extends yii\widgets\InputWidget{
-
+class Markdown extends yii\widgets\InputWidget
+{
     public $language = 'zh';
 
     public $useUploadImage = false;
 
-    public function init(){
+    public function init()
+    {
         $this->options['data-provide']='markdown-textarea';
         parent::init();
     }
-    public function run(){
+
+    public function run()
+    {
         MarkdownAsset::register($this->view)->js[] = 'js/locale/bootstrap-markdown.' . $this->language . '.js';
-        $options = [
+        $options                                   = [
             'autofocus' => false,
-            'language' => $this->language,
-            'footer' => "本站编辑器使用了 GFM (GitHub Flavored Markdown) 语法，关于此语法的说明，请 <a href=\"https://help.github.com/articles/github-flavored-markdown\" target=\"_blank\">点击此处</a> 获得更多帮助。"
+            'language'  => $this->language,
+            'footer'    => '本站编辑器使用了 GFM (GitHub Flavored Markdown) 语法，关于此语法的说明，请 <a href="https://help.github.com/articles/github-flavored-markdown" target="_blank">点击此处</a> 获得更多帮助。',
         ];
         $clientOptions = yii\helpers\Json::htmlEncode($options);
         if (!$this->useUploadImage) {
@@ -65,14 +71,15 @@ JS;
         }
         $this->view->registerJs($js);
         $html = '';
-        if($this->hasModel()){
-            $html = Html::activeTextarea($this->model,$this->attribute,$this->options);
-        }else{
-            $html = Html::textarea($this->name,$this->value,$this->options);
+        if ($this->hasModel()) {
+            $html = Html::activeTextarea($this->model, $this->attribute, $this->options);
+        } else {
+            $html = Html::textarea($this->name, $this->value, $this->options);
         }
         if ($this->useUploadImage) {
-           // $html .= $this->render('modal');
+            // $html .= $this->render('modal');
         }
+
         return $html;
     }
 }

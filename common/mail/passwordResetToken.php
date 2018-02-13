@@ -8,11 +8,11 @@ $resetLink = Yii::$app->urlManager->createAbsoluteUrl(['site/reset-password', 't
 ?>
 
 <div class="password-reset">
-    <p>您好 <?= Html::encode($user->username) ?>,</p>
+    <p>您好 <?= Html::encode($user->username); ?>,</p>
 
     <p>您已经请求了重置密码，可以点击下面的链接来重置密码 </p>
 
-    <p><?= Html::a(Html::encode($resetLink), $resetLink) ?></p>
+    <p><?= Html::a(Html::encode($resetLink), $resetLink); ?></p>
 
     <p>如果你没有请求重置密码，请忽略这封邮件.</p>
 

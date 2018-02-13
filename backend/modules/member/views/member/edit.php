@@ -1,7 +1,7 @@
 <?php
 use yii\widgets\ActiveForm;
 
-$this->title = $model->isNewRecord ? '创建' : '编辑';
+$this->title                   = $model->isNewRecord ? '创建' : '编辑';
 $this->params['breadcrumbs'][] = ['label' => '用户信息', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -16,8 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="ibox-content">
                     <?php $form = ActiveForm::begin(); ?>
                     <div class="col-sm-12">
-                        <?= $form->field($model, 'username')->textInput() ?>
-                        <?= $form->field($model, 'password_hash')->passwordInput() ?>
+                        <?= $form->field($model, 'username')->textInput(); ?>
+                        <?= $form->field($model, 'password_hash')->passwordInput(); ?>
                         <div class="hr-line-dashed"></div>
                     </div>
                     <div class="form-group">

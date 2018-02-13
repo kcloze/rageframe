@@ -1,16 +1,23 @@
 <?php
+
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace api\controllers;
 
+use common\controllers\ActiveController;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
-use common\controllers\ActiveController;
 
 /**
- * 基类控制器
+ * 基类控制器.
  *
  * Class AController
- * @package api\controllers
  */
 class AController extends ActiveController
 {
@@ -25,14 +32,14 @@ class AController extends ActiveController
     }
 
     /**
-     * 首页
+     * 首页.
      *
      * @return ActiveDataProvider
      */
     public function actionIndex()
     {
         $modelClass = $this->modelClass;
-        $query = $modelClass::find();
+        $query      = $modelClass::find();
 
         return new ActiveDataProvider([
             'query' => $query,
@@ -40,16 +47,15 @@ class AController extends ActiveController
     }
 
     /**
-     * 创建
+     * 创建.
      *
      * @return bool
      */
     public function actionCreate()
     {
-        $model = new $this->modelClass();
+        $model             = new $this->modelClass();
         $model->attributes = Yii::$app->request->post();
-        if (!$model->save())
-        {
+        if (!$model->save()) {
             // 返回数据验证失败
             return $this->setResponse($this->analysisError($model->getFirstErrors()));
         }
@@ -58,17 +64,17 @@ class AController extends ActiveController
     }
 
     /**
-     * 更新
+     * 更新.
      *
      * @param $id
+     *
      * @return mixed
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $model             = $this->findModel($id);
         $model->attributes = Yii::$app->request->post();
-        if (!$model->save())
-        {
+        if (!$model->save()) {
             // 返回数据验证失败
             return $this->setResponse($this->analysisError($model->getFirstErrors()));
         }
@@ -77,9 +83,10 @@ class AController extends ActiveController
     }
 
     /**
-     * 删除
+     * 删除.
      *
      * @param $id
+     *
      * @return mixed
      */
     public function actionDelete($id)
@@ -88,9 +95,10 @@ class AController extends ActiveController
     }
 
     /**
-     * 显示单个
+     * 显示单个.
      *
      * @param $id
+     *
      * @return mixed
      */
     public function actionView($id)
@@ -99,27 +107,25 @@ class AController extends ActiveController
     }
 
     /**
-     * 返回模型
+     * 返回模型.
      *
      * @param $id
-     * @return mixed
+     *
      * @throws NotFoundHttpException
+     *
+     * @return mixed
      */
     protected function findModel($id)
     {
-        if (empty($id))
-        {
+        if (empty($id)) {
             throw new NotFoundHttpException('请求的数据失败.');
         }
 
         $modelClass = $this->modelClass;
-        if ($model = $modelClass::findOne($id))
-        {
+        if ($model = $modelClass::findOne($id)) {
             return $model->loadDefaultValues();
         }
-        else
-        {
-            throw new NotFoundHttpException('请求的数据失败.');
-        }
+
+        throw new NotFoundHttpException('请求的数据失败.');
     }
 }

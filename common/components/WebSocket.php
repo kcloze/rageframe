@@ -1,15 +1,21 @@
 <?php
+
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace common\components;
 
-use Yii;
 use swoole_table;
 use swoole_websocket_server;
 
 /**
- * 长连接
+ * 长连接.
  *
  * Class WebSocketController
- * @package console\controllers
  */
 class WebSocket
 {
@@ -27,7 +33,7 @@ class WebSocket
     protected $_server;
 
     /**
-     * 基于共享内存和锁实现的超高性能，并发数据结构
+     * 基于共享内存和锁实现的超高性能，并发数据结构.
      *
      * @var
      */
@@ -35,14 +41,15 @@ class WebSocket
 
     /**
      * WebSocket constructor.
+     *
      * @param $host
      * @param $port
      * @param $config
      */
     public function __construct($host, $port, $config)
     {
-        $this->_host = $host;
-        $this->_port = $port;
+        $this->_host   = $host;
+        $this->_port   = $port;
         $this->_config = $config;
 
         // 创建内存表
@@ -58,7 +65,7 @@ class WebSocket
             'daemonize' => $this->_config['daemonize'],
             // 配置wss
             'ssl_cert_file' => $this->_config['ssl_cert_file'],
-            'ssl_key_file' => $this->_config['ssl_key_file'],
+            'ssl_key_file'  => $this->_config['ssl_key_file'],
         ]);
 
         $this->_server->on('open', [$this, 'onOpen']);
@@ -68,7 +75,7 @@ class WebSocket
     }
 
     /**
-     * 开启连接
+     * 开启连接.
      *
      * @param $server
      * @param $frame
@@ -82,7 +89,7 @@ class WebSocket
     }
 
     /**
-     * 消息
+     * 消息.
      *
      * @param $server
      * @param $frame
@@ -90,12 +97,12 @@ class WebSocket
     public function onMessage($server, $frame)
     {
         echo "receive from {$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
-        $server->push($frame->fd, "this is server receive");
-        $this->broadcast($frame->fd, "broadcast test." . $frame->fd);
+        $server->push($frame->fd, 'this is server receive');
+        $this->broadcast($frame->fd, 'broadcast test.' . $frame->fd);
     }
 
     /**
-     * 关闭连接
+     * 关闭连接.
      *
      * @param $ser
      * @param $fd
@@ -108,25 +115,23 @@ class WebSocket
     }
 
     /**
-     * 广播进程
+     * 广播进程.
      *
-     * @param integer $client_id 客户端id
-     * @param string $msg 广播消息
+     * @param int    $client_id 客户端id
+     * @param string $msg       广播消息
      */
     public function broadcast($client_id, $msg)
     {
         //广播
-        foreach ($this->_table as $cid => $info)
-        {
-            if ($client_id != $cid)
-            {
+        foreach ($this->_table as $cid => $info) {
+            if ($client_id != $cid) {
                 $this->_server->push($cid, $msg);
             }
         }
     }
 
     /**
-     * 创建内存表
+     * 创建内存表.
      *
      * 数指定表格的最大行数，如果$size不是为2的N次方，如1024、8192,65536等，底层会自动调整为接近的一个数字
      * 占用的内存总数为 (结构体长度 + KEY长度64字节 + 行尺寸$size) * (1.2预留20%作为hash冲突) * (列尺寸)，如果机器内存不足table会创建失败

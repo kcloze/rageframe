@@ -1,8 +1,13 @@
 <?php
 
-namespace common\models\base;
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
-use Yii;
+namespace common\models\base;
 
 /**
  * This is the model class for table "{{%api_log}}".
@@ -18,7 +23,7 @@ use Yii;
 class ApiLog extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -26,7 +31,7 @@ class ApiLog extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -40,18 +45,18 @@ class ApiLog extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'method' => '提交类型',
-            'url' => '提交的url',
-            'get_data' => 'get数据',
+            'id'        => 'ID',
+            'method'    => '提交类型',
+            'url'       => '提交的url',
+            'get_data'  => 'get数据',
             'post_data' => 'post数据',
-            'ip' => 'IP地址',
-            'append' => '创建时间',
+            'ip'        => 'IP地址',
+            'append'    => '创建时间',
         ];
     }
 }

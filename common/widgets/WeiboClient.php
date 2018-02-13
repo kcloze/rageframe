@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace common\widgets;
 
 use yii\authclient\OAuth2;
@@ -17,26 +24,26 @@ class WeiboClient extends OAuth2
         $user = $this->api('users/show.json', 'GET', ['uid' => $this->user->uid]);
 
         return [
-            'client' => 'weibo',
-            'openid' => $user['id'],
+            'client'   => 'weibo',
+            'openid'   => $user['id'],
             'nickname' => $user['name'],
-            'gender' => $user['gender'],
+            'gender'   => $user['gender'],
             'location' => $user['location'],
         ];
     }
 
-
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function getUser()
     {
         $str = file_get_contents('https://api.weibo.com/2/account/get_uid.json?access_token=' . $this->accessToken->token);
+
         return json_decode($str);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function defaultName()
     {
@@ -44,7 +51,7 @@ class WeiboClient extends OAuth2
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function defaultTitle()
     {

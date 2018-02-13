@@ -1,4 +1,12 @@
 <?php
+
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace common\models\base;
 
 use Yii;
@@ -8,31 +16,31 @@ use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
- * User model
+ * User model.
  *
- * @property integer $id
+ * @property int $id
  * @property string $username
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $email
  * @property string $auth_key
- * @property integer $status
- * @property integer $created_at
- * @property integer $updated_at
+ * @property int $status
+ * @property int $created_at
+ * @property int $updated_at
  * @property string $password write-only password
  */
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
+    const STATUS_ACTIVE  = 10;
 
     /**
-     * 规则
+     * 规则.
      */
     const ROLE_ADMIN = 10;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -40,7 +48,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function behaviors()
     {
@@ -50,7 +58,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -61,7 +69,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function findIdentity($id)
     {
@@ -69,7 +77,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
@@ -77,9 +85,10 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * 通过用户名查找用户
+     * 通过用户名查找用户.
      *
      * @param string $username
+     *
      * @return static|null
      */
     public static function findByUsername($username)
@@ -88,28 +97,30 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * 查找密码重置token
+     * 查找密码重置token.
      *
      * @param string $token password reset token
+     *
      * @return static|null
      */
     public static function findByPasswordResetToken($token)
     {
         if (!static::isPasswordResetTokenValid($token)) {
-            return null;
+            return;
         }
 
         return static::findOne([
             'password_reset_token' => $token,
-            'status' => self::STATUS_ACTIVE,
+            'status'               => self::STATUS_ACTIVE,
         ]);
     }
 
     /**
-     * 发现如果密码重置令牌是有效的
+     * 发现如果密码重置令牌是有效的.
      *
      * @param string $token password reset token
-     * @return boolean
+     *
+     * @return bool
      */
     public static function isPasswordResetTokenValid($token)
     {
@@ -118,12 +129,13 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         $timestamp = (int) substr($token, strrpos($token, '_') + 1);
-        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
+        $expire    = Yii::$app->params['user.passwordResetTokenExpire'];
+
         return $timestamp + $expire >= time();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -132,6 +144,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * 获取授权码
+     *
      * @return string
      */
     public function getAuthKey()
@@ -142,7 +155,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * 验证授权码
      *
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function validateAuthKey($authKey)
     {
@@ -150,9 +163,10 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * 验证密码是否正确
+     * 验证密码是否正确.
      *
      * @param $password
+     *
      * @return bool
      */
     public function validatePassword($password)
@@ -162,6 +176,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * 设置密码
+     *
      * @param $password
      */
     public function setPassword($password)
@@ -178,7 +193,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * 设置密码重置秘钥
+     * 设置密码重置秘钥.
      */
     public function generatePasswordResetToken()
     {
@@ -186,7 +201,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * 设置密码重置秘钥为空
+     * 设置密码重置秘钥为空.
      */
     public function removePasswordResetToken()
     {

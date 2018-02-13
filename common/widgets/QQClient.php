@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace common\widgets;
 
 use yii\authclient\OAuth2;
@@ -12,38 +19,37 @@ class QQClient extends OAuth2
 
     public $apiBaseUrl = 'https://graph.qq.com';
 
-
     protected function initUserAttributes()
     {
         $user = $this->api('user/get_user_info', 'GET', ['oauth_consumer_key' => $this->user->client_id, 'openid' => $this->user->openid]);
 
         return [
-            'client' => 'qq',
-            'openid' => $this->user->openid,
+            'client'   => 'qq',
+            'openid'   => $this->user->openid,
             'nickname' => $user['nickname'],
-            'gender' => $user['gender'],
+            'gender'   => $user['gender'],
             'location' => $user['province'] . $user['city'],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function getUser()
     {
         $str = file_get_contents('https://graph.qq.com/oauth2.0/me?access_token=' . $this->accessToken->token);
 
-        if (strpos($str, "callback") !== false) {
-            $lpos = strpos($str, "(");
-            $rpos = strrpos($str, ")");
-            $str = substr($str, $lpos + 1, $rpos - $lpos -1);
+        if (false !== strpos($str, 'callback')) {
+            $lpos = strpos($str, '(');
+            $rpos = strrpos($str, ')');
+            $str  = substr($str, $lpos + 1, $rpos - $lpos - 1);
         }
 
         return json_decode($str);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function defaultName()
     {
@@ -51,7 +57,7 @@ class QQClient extends OAuth2
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function defaultTitle()
     {

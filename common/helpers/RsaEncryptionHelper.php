@@ -1,11 +1,18 @@
 <?php
+
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace common\helpers;
 
 /**
- * RSA 加密算法
+ * RSA 加密算法.
  *
  * Class RsaEncryptionHelper
- * @package common\helpers
  */
 class RsaEncryptionHelper
 {
@@ -13,10 +20,11 @@ class RsaEncryptionHelper
      * 加密
      * openssl genrsa -out rsa_private_key.pem 1024 // 生成原始 RSA私钥文件 rsa_private_key.pem
      * openssl pkcs8 -topk8 -inform PEM -in rsa_private_key.pem -outform PEM -nocrypt -out private_key.pem // 将原始 RSA私钥转换为 pkcs8格式
-     * openssl rsa -in rsa_private_key.pem -pubout -out rsa_public_key.pem // 生成RSA公钥 rsa_public_key.pem
+     * openssl rsa -in rsa_private_key.pem -pubout -out rsa_public_key.pem // 生成RSA公钥 rsa_public_key.pem.
      *
-     * @param string $data 数据
+     * @param string $data          数据
      * @param string $rsaPrivateKey 私钥PEM文件的绝对路径
+     *
      * @return string
      */
     public static function enCode($data, $rsaPrivateKey)
@@ -41,10 +49,11 @@ class RsaEncryptionHelper
     }
 
     /**
-     * 解密
+     * 解密.
      *
-     * @param string $data 加密后的数据
+     * @param string $data         加密后的数据
      * @param string $rsaPublicKey 公钥PEM文件的绝对路径
+     *
      * @return mixed
      */
     public static function deCode($data, $rsaPublicKey)
@@ -56,7 +65,7 @@ class RsaEncryptionHelper
         $res = openssl_get_publickey($pubKey);
 
         /* 对数据进行解密 */
-        openssl_public_decrypt(base64_decode($data), $decrypted, $res);
+        openssl_public_decrypt(base64_decode($data, true), $decrypted, $res);
 
         /* 释放资源 */
         openssl_free_key($res);

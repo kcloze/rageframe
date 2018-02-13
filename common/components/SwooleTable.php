@@ -1,22 +1,30 @@
 <?php
+
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace common\components;
 
 use swoole_table;
 
 /**
- * Swoole 内存表
+ * Swoole 内存表.
  *
  * Class SwooleTable
- * @package common\components
  */
 class SwooleTable
 {
     protected $_tables;
 
     /**
-     * 设置内存表
+     * 设置内存表.
      *
      * @param $table
+     *
      * @return mixed
      */
     public function table($table)
@@ -30,13 +38,14 @@ class SwooleTable
     }
 
     /**
-     * 数据表定义
+     * 数据表定义.
      *
      * $arr = [
      *      'key' => 'keys',
      *      'type' => 'string',
      *      'len' => 65536
      * ];
+     *
      * @param $table
      * @param $arr
      */
@@ -45,13 +54,11 @@ class SwooleTable
         $allType = [
             'int'       => swoole_table::TYPE_INT,
             'string'    => swoole_table::TYPE_STRING,
-            'float'     => swoole_table::TYPE_FLOAT
+            'float'     => swoole_table::TYPE_FLOAT,
         ];
 
-        foreach ($arr as $row)
-        {
-            if (!isset($allType[$row['type']]))
-            {
+        foreach ($arr as $row) {
+            if (!isset($allType[$row['type']])) {
                 $row['type'] = 'string';
             }
 

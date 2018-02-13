@@ -1,24 +1,30 @@
 <?php
+
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace backend\controllers;
 
-use yii;
 use common\helpers\ArithmeticHelper;
 use common\helpers\DataDictionaryHelper;
-use common\helpers\RsaEncryptionHelper;
 use jianyan\basics\common\models\sys\Config;
 use jianyan\basics\common\models\sys\ConfigCate;
 use jianyan\basics\common\models\sys\Manager;
+use yii;
 
 /**
- * 测试控制器
+ * 测试控制器.
  *
  * Class FileController
- * @package backend\modules\sys\controllers
  */
 class TestController extends MController
 {
     /**
-     * 默认禁止使用测试
+     * 默认禁止使用测试.
      *
      * @var bool
      */
@@ -26,8 +32,7 @@ class TestController extends MController
 
     public function init()
     {
-        if($this->visitAuth == false)
-        {
+        if (false == $this->visitAuth) {
             die();
         }
 
@@ -45,63 +50,54 @@ class TestController extends MController
 
         // 获取全部分类并压缩到分类中
         $configCateAll = ConfigCate::getListAll();
-        foreach ($configCateAll as &$item)
-        {
-            foreach ($list as $vo)
-            {
-                if($item['id'] == $vo['cate_child'])
-                {
+        foreach ($configCateAll as &$item) {
+            foreach ($list as $vo) {
+                if ($item['id'] == $vo['cate_child']) {
                     $item['config'][] = $vo;
                 }
             }
         }
 
         $str = '';
-        $i = 0;
-        foreach ($configCateAll as $key => $datum)
-        {
-            if(isset($datum['config']))
-            {
+        $i   = 0;
+        foreach ($configCateAll as $key => $datum) {
+            if (isset($datum['config'])) {
                 $str .= "### {$datum['title']}" . "\n\r";
-                $str .= "参数 | 描述 " . "\n";
-                $str .= "---|---" . "\n";
+                $str .= '参数 | 描述 ' . "\n";
+                $str .= '---|---' . "\n";
 
-                foreach ($datum['config'] as $item)
-                {
+                foreach ($datum['config'] as $item) {
                     $str .= "{$item['title']} | {$item['name']}" . "\n";
                 }
 
                 $str .= "\r";
-                $i++;
+                ++$i;
             }
         }
 
-        echo "<pre>";
+        echo '<pre>';
         echo $str;
         exit();
-
-
     }
 
     /**
-     * 测试输出马克笔记格式的数据
+     * 测试输出马克笔记格式的数据.
      */
     public function actionStoredProcedure()
     {
         /**
-         * 创建的存储过程
+         * 创建的存储过程.
          */
-
-        $reg = "davafy@davafy.com";
-        $cmd = Yii::$app->db->createCommand("call test_table(:reg, @s)");
-        $cmd->bindParam(':reg',$reg,\PDO::PARAM_STR,50);
+        $reg = 'davafy@davafy.com';
+        $cmd = Yii::$app->db->createCommand('call test_table(:reg, @s)');
+        $cmd->bindParam(':reg', $reg, \PDO::PARAM_STR, 50);
         $res = $cmd->queryOne();
 
-        $ret = Yii::$app->db->createCommand("select @s")->queryOne();
+        $ret = Yii::$app->db->createCommand('select @s')->queryOne();
     }
 
     /**
-     * 导出马克笔记
+     * 导出马克笔记.
      */
     public function actionDataDictionary()
     {
@@ -110,7 +106,7 @@ class TestController extends MController
     }
 
     /**
-     * 队列测试
+     * 队列测试.
      */
     public function actionQueue()
     {
@@ -129,7 +125,7 @@ class TestController extends MController
     }
 
     /**
-     * 上传图片测试
+     * 上传图片测试.
      *
      * @return string
      */
@@ -143,7 +139,7 @@ class TestController extends MController
     }
 
     /**
-     * 上传文件测试
+     * 上传文件测试.
      *
      * @return string
      */
@@ -151,9 +147,9 @@ class TestController extends MController
     {
         $model = new Manager();
 
-        if(Yii::$app->request->isPost)
-        {
-            $this->p(Yii::$app->request->post());die();
+        if (Yii::$app->request->isPost) {
+            $this->p(Yii::$app->request->post());
+            die();
         }
 
         return $this->render('upload-file', [
@@ -162,16 +158,15 @@ class TestController extends MController
     }
 
     /**
-     * 红包生成测试
+     * 红包生成测试.
      */
     public function actionRedPacket()
     {
         // 切记如果红包数量太多，不要设置为0.1 会导致最后红包金额不对
-        $data = ArithmeticHelper::getRedPackage(100,998,0.01,3);
+        $data = ArithmeticHelper::getRedPackage(100, 998, 0.01, 3);
 
         $all_money = 0;
-        foreach ($data as $datum)
-        {
+        foreach ($data as $datum) {
             $all_money += $datum;
         }
 
@@ -180,7 +175,8 @@ class TestController extends MController
     }
 
     /**
-     * 测试接口返回时间
+     * 测试接口返回时间.
+     *
      * @return array
      */
     public function actionApiResult()
@@ -189,8 +185,7 @@ class TestController extends MController
         $this->_result->code = 200;
 
         $data = [];
-        for ($i = 0; $i < 50; $i++)
-        {
+        for ($i = 0; $i < 50; ++$i) {
             $user   = Manager::find()
                 ->with('assignment')
                 ->asArray()
@@ -208,9 +203,11 @@ class TestController extends MController
      *    'cache'      => [
      *        'class' => 'yii\redis\Cache',
      *     ],
-     * 一般数据0.0001秒
+     * 一般数据0.0001秒.
+     *
      * @param $key
      * @param $value
+     * @param mixed $time
      */
     public function actionSetRedis($key, $value, $time = 60)
     {
@@ -226,15 +223,16 @@ class TestController extends MController
     }
 
     /**
-     * 输出redis并获取获得速度
+     * 输出redis并获取获得速度.
+     *
      * @param $key
      */
     public function actionGetRedis($key)
     {
         $startTime = microtime(true);
-        $rsp = Yii::$app->redis->get($key);
-        $endTime = microtime(true);
-        $elapsed = number_format($endTime - $startTime, 4);
+        $rsp       = Yii::$app->redis->get($key);
+        $endTime   = microtime(true);
+        $elapsed   = number_format($endTime - $startTime, 4);
 
         $this->p($rsp);
         $this->p($elapsed);
@@ -242,9 +240,11 @@ class TestController extends MController
 
     /**
      * memcache写入缓存
-     * 一般数据0.0005左右
+     * 一般数据0.0005左右.
+     *
      * @param $key
      * @param $value
+     * @param mixed $time
      */
     public function actionSetMemCache($key, $value, $time = 60)
     {
@@ -258,22 +258,23 @@ class TestController extends MController
     }
 
     /**
-     * memcache输出测试
+     * memcache输出测试.
+     *
      * @param $key
      */
     public function actionGetMemCache($key)
     {
         $startTime = microtime(true);
-        $rsp = Yii::$app->memcache->get($key);
-        $endTime = microtime(true);
-        $elapsed = number_format($endTime - $startTime, 4);
+        $rsp       = Yii::$app->memcache->get($key);
+        $endTime   = microtime(true);
+        $elapsed   = number_format($endTime - $startTime, 4);
 
         $this->p($rsp);
         $this->p($elapsed);
     }
 
     /**
-     * 输出phpinfo
+     * 输出phpinfo.
      */
     public function actionPhpInfo()
     {

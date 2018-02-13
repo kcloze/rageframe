@@ -1,4 +1,12 @@
 <?php
+
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 $params = array_merge(
     require(__DIR__ . '/../../vendor/jianyan74/rageframe-basics/api/config/params.php'),
     require(__DIR__ . '/../../common/config/params.php'),
@@ -8,22 +16,22 @@ $params = array_merge(
 );
 
 return [
-    'id' => 'app-api',
-    'basePath' => dirname(__DIR__),
+    'id'                  => 'app-api',
+    'basePath'            => dirname(__DIR__),
     'controllerNamespace' => 'api\controllers',
-    'bootstrap' => ['log'],
-    'components' => [
+    'bootstrap'           => ['log'],
+    'components'          => [
         'user' => [
-            'identityClass' => 'common\models\base\AccessToken',
+            'identityClass'   => 'common\models\base\AccessToken',
             'enableAutoLogin' => true,
-            'enableSession' => false,// 显示一个HTTP 403 错误而不是跳转到登录界面
-            'loginUrl' => null,
+            'enableSession'   => false, // 显示一个HTTP 403 错误而不是跳转到登录界面
+            'loginUrl'        => null,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
-            'targets' => [
+            'targets'    => [
                 [
-                    'class' => 'yii\log\FileTarget',
+                    'class'  => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                 ],
             ],
@@ -41,56 +49,56 @@ return [
             'showScriptName' => false,
             // 指定续接在URL后面的一个后缀，如 .html 之类的。仅在 enablePrettyUrl 启用时有效。
             'suffix' => '',
-            'rules' => [
+            'rules'  => [
                 [
-                    'class' => 'yii\rest\UrlRule',
+                    'class'      => 'yii\rest\UrlRule',
                     'controller' => [
-                        /**
+                        /*
                          * 默认登录测试控制器
                          * http://当前域名/api/site/login?group=1
                          */
                         'site',
                         'file',
-                        /** ------ 业务相关 ------ **/
+                        /* ------ 业务相关 ------ **/
                         'v1/default',
                     ],
-                    'pluralize' => false,// 是否启用复数形式，注意index的复数indices，开启后不直观
+                    'pluralize'     => false, // 是否启用复数形式，注意index的复数indices，开启后不直观
                     'extraPatterns' => [
-                        'POST login' => 'login',// 登录获取token
-                        'GET refresh' => 'refresh',// 重置token
-                        'GET search' => 'search',// 测试查询
-                        'POST upload-images' => 'upload-images', // 图片上传
-                        'POST upload-videos' => 'upload-videos', // 视频上传
-                        'POST upload-voices' => 'upload-voices', // 语音上传
-                        'POST upload-files' => 'upload-files', // 文件上传
+                        'POST login'             => 'login', // 登录获取token
+                        'GET refresh'            => 'refresh', // 重置token
+                        'GET search'             => 'search', // 测试查询
+                        'POST upload-images'     => 'upload-images', // 图片上传
+                        'POST upload-videos'     => 'upload-videos', // 视频上传
+                        'POST upload-voices'     => 'upload-voices', // 语音上传
+                        'POST upload-files'      => 'upload-files', // 文件上传
                         'POST upload-base64-img' => 'upload-base64-img', // base64上传 其他上传权限自己添加
                     ],
                 ],
-            ]
+            ],
         ],
         'response' => [
-            'class' => 'yii\web\Response',
+            'class'         => 'yii\web\Response',
             'on beforeSend' => function ($event) {
                 $response = $event->sender;
                 $response->data = [
-                    'code' => $response->statusCode,
+                    'code'    => $response->statusCode,
                     'message' => $response->statusText,
-                    'data' => $response->data,
+                    'data'    => $response->data,
                 ];
                 // 格式化报错输入格式 默认为格式500状态码 其他可自行修改
-                if ($response->statusCode == 500) {
-                    if (YII_DEBUG){
+                if (500 == $response->statusCode) {
+                    if (YII_DEBUG) {
                         $exception = Yii::$app->getErrorHandler()->exception;
                         $response->data['data'] = [
-                            'name' => ($exception instanceof Exception || $exception instanceof ErrorException) ? $exception->getName() : 'Exception',
-                            'type' => get_class($exception),
-                            'file' => $exception->getFile(),
+                            'name'         => ($exception instanceof Exception || $exception instanceof ErrorException) ? $exception->getName() : 'Exception',
+                            'type'         => get_class($exception),
+                            'file'         => $exception->getFile(),
                             'errorMessage' => $exception->getMessage(),
-                            'line' => $exception->getLine(),
-                            'stack-trace' => explode("\n", $exception->getTraceAsString()),
+                            'line'         => $exception->getLine(),
+                            'stack-trace'  => explode("\n", $exception->getTraceAsString()),
                         ];
 
-                        if ($exception instanceof Exception){
+                        if ($exception instanceof Exception) {
                             $response->data['data']['error-info'] = $exception->errorInfo;
                         }
                     } else {

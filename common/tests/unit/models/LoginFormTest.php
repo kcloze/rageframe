@@ -1,13 +1,20 @@
 <?php
 
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace common\tests\unit\models;
 
-use Yii;
-use common\models\LoginForm;
 use common\fixtures\UserFixture as UserFixture;
+use common\models\LoginForm;
+use Yii;
 
 /**
- * Login form test
+ * Login form test.
  */
 class LoginFormTest extends \Codeception\Test\Unit
 {
@@ -16,14 +23,13 @@ class LoginFormTest extends \Codeception\Test\Unit
      */
     protected $tester;
 
-
     public function _before()
     {
         $this->tester->haveFixtures([
             'user' => [
-                'class' => UserFixture::className(),
-                'dataFile' => codecept_data_dir() . 'user.php'
-            ]
+                'class'    => UserFixture::className(),
+                'dataFile' => codecept_data_dir() . 'user.php',
+            ],
         ]);
     }
 

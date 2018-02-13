@@ -1,8 +1,16 @@
 <?php
+
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 return [
-    /** ------ 每分钟定时运行脚本 ------ **/
+    /* ------ 每分钟定时运行脚本 ------ **/
     'cron' => '* * * * *',
-    /**
+    /*
      * 'test/example' => [
      *          'cron'      => '* * * * *',
      *          'cron-stdout'=> '/tmp/ExampleCommand.log',
@@ -13,10 +21,10 @@ return [
         //清理过期的微信历史消息记录
         //每天凌晨执行一次
         'msg-history/index' => [
-            'cron' => '0 0 * * *',
-            'cron-stdout'=> '/tmp/rageframe/cron/MsgHistory.log',//成功日志
-            'cron-stderr'=> '/tmp/rageframe/cron/MsgHistoryError.log',//错误日志
-        ]
+            'cron'       => '0 0 * * *',
+            'cron-stdout'=> '/tmp/rageframe/cron/MsgHistory.log', //成功日志
+            'cron-stderr'=> '/tmp/rageframe/cron/MsgHistoryError.log', //错误日志
+        ],
         //......更多的定时任务
     ],
 ];

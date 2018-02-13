@@ -2,7 +2,7 @@
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
 
-$this->title = '用户信息';
+$this->title                   = '用户信息';
 $this->params['breadcrumbs'][] = ['label' =>  $this->title];
 ?>
 
@@ -19,17 +19,29 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                             <label class="col-xs-12 col-sm-2 col-md-2 control-label">搜索类型</label>
                             <div class="col-sm-8 col-lg-9 col-xs-12">
                                 <div class="btn-group">
-                                    <a href="<?= Url::to(['index','type'=>1])?>" class="btn <?php if($type == 1){ ?>btn-primary<?php }else{ ?>btn-white<?php } ?>">登陆账号</a>
-                                    <a href="<?= Url::to(['index','type'=>2])?>" class="btn <?php if($type == 2){ ?>btn-primary<?php }else{ ?>btn-white<?php } ?>">真实姓名</a>
-                                    <a href="<?= Url::to(['index','type'=>3])?>" class="btn <?php if($type == 3){ ?>btn-primary<?php }else{ ?>btn-white<?php } ?>">手机号码</a>
+                                    <a href="<?= Url::to(['index', 'type'=>1]); ?>" class="btn <?php if (1 == $type) {
+    ?>btn-primary<?php
+} else {
+        ?>btn-white<?php
+    } ?>">登陆账号</a>
+                                    <a href="<?= Url::to(['index', 'type'=>2]); ?>" class="btn <?php if (2 == $type) {
+        ?>btn-primary<?php
+    } else {
+        ?>btn-white<?php
+    } ?>">真实姓名</a>
+                                    <a href="<?= Url::to(['index', 'type'=>3]); ?>" class="btn <?php if (3 == $type) {
+        ?>btn-primary<?php
+    } else {
+        ?>btn-white<?php
+    } ?>">手机号码</a>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-xs-12 col-sm-2 col-md-2 control-label">关键字</label>
                             <div class="col-sm-8 col-xs-12 input-group m-b">
-                                <input type="hidden" class="form-control" name="type" value="<?= $type?>" />
-                                <input type="text" class="form-control" name="keyword" value="<?= $keyword?>" />
+                                <input type="hidden" class="form-control" name="type" value="<?= $type; ?>" />
+                                <input type="text" class="form-control" name="keyword" value="<?= $keyword; ?>" />
                                 <span class="input-group-btn">
                                     <button class="btn btn-white"><i class="fa fa-search"></i> 搜索</button>
                                 </span>
@@ -46,7 +58,7 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                 <div class="ibox-title">
                     <h5>用户信息</h5>
                     <div class="ibox-tools">
-                        <a class="btn btn-primary btn-xs" href="<?= Url::to(['edit'])?>">
+                        <a class="btn btn-primary btn-xs" href="<?= Url::to(['edit']); ?>">
                             <i class="fa fa-plus"></i>  创建用户
                         </a>
                     </div>
@@ -69,31 +81,37 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                         </tr>
                         </thead>
                         <tbody>
-                        <?php foreach($models as $model){ ?>
+                        <?php foreach ($models as $model) {
+        ?>
                             <tr>
-                                <td><?= $model->id?></td>
+                                <td><?= $model->id; ?></td>
                                 <td class="feed-element">
-                                    <?php if($model->head_portrait){ ?>
+                                    <?php if ($model->head_portrait) {
+            ?>
                                         <img src="<?= $model->head_portrait; ?>" class="img-circle">
-                                    <?php }else{ ?>
+                                    <?php
+        } else {
+            ?>
                                         <img src="/resource/backend/img/default-head.png" class="img-circle">
-                                    <?php } ?>
+                                    <?php
+        } ?>
                                 </td>
-                                <td><?= $model->username?></td>
-                                <td><?= $model->realname?></td>
-                                <td><?= $model->mobile_phone?></td>
-                                <td><?= $model->email?></td>
-                                <td><?= $model->visit_count?></td>
-                                <td><?= $model->last_ip?></td>
-                                <td><?= Yii::$app->formatter->asDatetime($model->last_time)?></td>
-                                <td><?= Yii::$app->formatter->asDatetime($model->created_at)?></td>
+                                <td><?= $model->username; ?></td>
+                                <td><?= $model->realname; ?></td>
+                                <td><?= $model->mobile_phone; ?></td>
+                                <td><?= $model->email; ?></td>
+                                <td><?= $model->visit_count; ?></td>
+                                <td><?= $model->last_ip; ?></td>
+                                <td><?= Yii::$app->formatter->asDatetime($model->last_time); ?></td>
+                                <td><?= Yii::$app->formatter->asDatetime($model->created_at); ?></td>
                                 <td>
-                                    <a href="<?= Url::to(['edit','id'=>$model->id])?>"><span class="btn btn-info btn-sm">账号管理</span></a>&nbsp
-                                    <a href="<?= Url::to(['personal','id'=>$model->id])?>"><span class="btn btn-info btn-sm">信息编辑</span></a>&nbsp
-                                    <a href="<?= Url::to(['delete','id'=>$model->id])?>"  onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>&nbsp
+                                    <a href="<?= Url::to(['edit', 'id'=>$model->id]); ?>"><span class="btn btn-info btn-sm">账号管理</span></a>&nbsp
+                                    <a href="<?= Url::to(['personal', 'id'=>$model->id]); ?>"><span class="btn btn-info btn-sm">信息编辑</span></a>&nbsp
+                                    <a href="<?= Url::to(['delete', 'id'=>$model->id]); ?>"  onclick="rfDelete(this);return false;"><span class="btn btn-warning btn-sm">删除</span></a>&nbsp
                                 </td>
                             </tr>
-                        <?php } ?>
+                        <?php
+    } ?>
                         </tbody>
                     </table>
                     <div class="row">
@@ -101,11 +119,11 @@ $this->params['breadcrumbs'][] = ['label' =>  $this->title];
                             <?= LinkPager::widget([
                                 'pagination'        => $pages,
                                 'maxButtonCount'    => 5,
-                                'firstPageLabel'    => "首页",
-                                'lastPageLabel'     => "尾页",
-                                'nextPageLabel'     => "下一页",
-                                'prevPageLabel'     => "上一页",
-                            ]);?>
+                                'firstPageLabel'    => '首页',
+                                'lastPageLabel'     => '尾页',
+                                'nextPageLabel'     => '下一页',
+                                'prevPageLabel'     => '上一页',
+                            ]); ?>
                         </div>
                     </div>
                 </div>

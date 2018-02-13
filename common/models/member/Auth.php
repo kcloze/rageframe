@@ -1,21 +1,26 @@
 <?php
 
-namespace common\models\member;
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
-use Yii;
+namespace common\models\member;
 
 /**
  * This is the model class for table "{{%member_user_auth}}".
  *
- * @property integer $id
- * @property integer $user_id
+ * @property int $id
+ * @property int $user_id
  * @property string $source
  * @property string $source_id
  */
 class Auth extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -23,7 +28,7 @@ class Auth extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -34,24 +39,25 @@ class Auth extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'id'        => 'ID',
             'member_id' => '用户id',
-            'source' => '来源',
+            'source'    => '来源',
             'source_id' => '来源id',
         ];
     }
 
     /**
-     * 关联用户
+     * 关联用户.
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getMember()
     {
-        return $this->hasOne(Member::className(),['id'=>'member_id']);
+        return $this->hasOne(Member::className(), ['id'=>'member_id']);
     }
 }

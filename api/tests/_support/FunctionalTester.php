@@ -1,8 +1,17 @@
 <?php
+
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace api\tests;
 
 /**
- * Inherited Methods
+ * Inherited Methods.
+ *
  * @method void wantToTest($text)
  * @method void wantTo($text)
  * @method void execute($callable)
@@ -19,7 +28,7 @@ namespace api\tests;
 class FunctionalTester extends \Codeception\Actor
 {
     use _generated\FunctionalTesterActions;
-   /**
-    * Define custom actions here
-    */
+    /*
+     * Define custom actions here
+     */
 }

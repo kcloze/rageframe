@@ -1,19 +1,26 @@
 <?php
+
+/*
+ * This file is part of PHP CS Fixer.
+ * (c) kcloze <pei.greet@qq.com>
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace common\models\base;
 
 use Yii;
 use yii\base\Model;
 
 /**
- * 登陆注册基类
+ * 登陆注册基类.
  *
  * Class LoginForm
- * @package common\models\base
  */
 abstract class LoginForm extends Model
 {
     /**
-     * 账号
+     * 账号.
      *
      * @var
      */
@@ -27,7 +34,7 @@ abstract class LoginForm extends Model
     public $password;
 
     /**
-     * 记住自己
+     * 记住自己.
      *
      * @var bool
      */
@@ -36,7 +43,7 @@ abstract class LoginForm extends Model
     protected $_user;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -62,26 +69,23 @@ abstract class LoginForm extends Model
      */
     public function validatePassword($attribute)
     {
-        if (!$this->hasErrors())
-        {
+        if (!$this->hasErrors()) {
             /* @var $user \common\models\base\User */
             $user = $this->getUser();
-            if (!$user || !$user->validatePassword($this->password))
-            {
+            if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError($attribute, '账号或者密码错误.');
             }
         }
     }
 
     /**
-     * 登陆
+     * 登陆.
      *
      * @return bool
      */
     public function login()
     {
-        if ($this->validate())
-        {
+        if ($this->validate()) {
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
 
